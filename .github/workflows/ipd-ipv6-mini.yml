@@ -18,7 +18,7 @@ env:
   SOURCE_BRANCH: openwrt-18.06-k5.4
   CONFIG_FILE: configx/x86/64.config
   DIY_SH: scriptx/settings-mini.sh
-  DIY2_SH: scriptx/custom.sh
+  DIY2_SH: scriptx/diy.sh
   KMODS_IN_FIRMWARE: f
   UPLOAD_WETRANSFER: true
   UPLOAD_COWTRANSFER: true
@@ -89,8 +89,7 @@ jobs:
           # cat configx/extra-drivers.config >> $OPENWRTROOT/.config
         chmod +x scriptx/*.sh
         cd $OPENWRTROOT
-        ../scriptx/preset-clash-core.sh amd64
-        ../scriptx/preset-terminal-tools.sh
+        ../scriptx/clash-core.sh amd64
         make defconfig
     - name: Download Package
       id: package
@@ -162,11 +161,11 @@ jobs:
           echo "FIRMWARE=$(echo '${{needs.Build.outputs.FIRMWARE}}')" >> $GITHUB_ENV
           echo "GENERATE_STATUS=$(echo '${{needs.Build.outputs.GENERATE_STATUS}}')" >> $GITHUB_ENV
         
-      - name: Download Bin Folder
+      - name: up FIRMWARE
         uses: actions/download-artifact@v2
         with:
-          name: bin-archive
-          path: openwrt/bin
+          name: FIRMWARE-mini-$(date +"%Y.%m.%d")
+          path: ${FIRMWARE}
           
       - name: Upload Firmware To WeTransfer
         id: wetransfer
@@ -179,7 +178,7 @@ jobs:
         id: tag
         if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
-          echo "::set-output name=release_tag::$(date +"%Y.%m.%d")-Lean3"
+          echo "::set-output name=release_tag::$(date +"%Y.%m.%d")"
           echo "::set-output name=release_date::$(date +"%Y.%m.%d")"
           touch release.txt
           [ $UPLOAD_WETRANSFER = true ] && echo "[WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
