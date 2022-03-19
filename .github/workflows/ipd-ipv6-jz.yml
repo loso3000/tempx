@@ -18,7 +18,7 @@ env:
   SOURCE_BRANCH: openwrt-18.06-k5.4
   CONFIG_FILE: configx/x86/64.config
   DIY_SH: scriptx/settings-mini.sh
-  DIY2_SH: scriptx/custom.sh
+  DIY2_SH: scriptx/diy.sh
   KMODS_IN_FIRMWARE: true
   UPLOAD_WETRANSFER: true
   UPLOAD_COWTRANSFER: true
@@ -89,7 +89,7 @@ jobs:
           # cat configx/extra-drivers.config >> $OPENWRTROOT/.config
         chmod +x scriptx/*.sh
         cd $OPENWRTROOT
-        ../scriptx/preset-clash-core.sh amd64
+        ../scriptx/clash-core.sh amd64
         make defconfig
     - name: Download Package
       id: package
