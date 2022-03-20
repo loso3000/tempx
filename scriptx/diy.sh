@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# set -x
+
 
 echo "--------------------start-----------------"
 
@@ -9,7 +11,6 @@ SSID=Sirpdboy
 ENCRYPTION=psk2
 KEY=123456
 
-# 使用 O2 级别的优化
 # sed -i 's/O3/O2/g' include/target.mk
 git clone https://github.com/sirpdboy/build.git ./package/build
 git clone https://github.com/sirpdboy/sirpdboy-package ./package/diy
@@ -49,7 +50,7 @@ sed -i "/set wireless.default_radio\${devidx}.mode=ap/a\                        
 sed -i 's/set wireless.radio\${devidx}.disabled=1/set wireless.radio\${devidx}.disabled=0/g' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 #sed -i '/^EOF/i \            \set wireless.default_radio${devidx}.key=567890321' package/kernel/mac80211/files/lib/wifi/mac80211.sh
 
-echo '替换smartdns'
+echo 'smartdns'
 # rm -rf ./package/diy/smartdns
 rm -rf ./feeds/packages/net/smartdns&& svn co https://github.com/sirpdboy/sirpdboy-package/trunk/smartdns ./feeds/packages/net/smartdns
 rm -rf ./feeds/luci/applications/luci-app-netdata && svn co https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-netdata ./feeds/luci/applications/luci-app-netdata
@@ -180,18 +181,18 @@ git clone https://github.com/immortalwrt/luci-app-unblockneteasemusic.git  ./pac
 # git clone https://github.com/UnblockNeteaseMusic/luci-app-unblockneteasemusic.git  ./package/diy/luci-app-unblockneteasemusic
 sed -i 's/解除网易云音乐播放限制/解锁歌曲/g' ./package/diy/luci-app-unblockneteasemusic/luasrc/controller/unblockneteasemusic.lua
 
-#修正nat回流 
+#nat
 cat ./package/build/set/sysctl.conf >>  package/base-files/files/etc/sysctl.conf
-#修正连接数 
+#
 sed -i '/customized in this file/a net.netfilter.nf_conntrack_max=165535' package/base-files/files/etc/sysctl.conf
-# 最大连接数
+#
 sed -i 's/65535/165535/g' ./package/kernel/linux/files/sysctl-nf-conntrack.conf
 
 #docker err
 #rm -rf ./feeds/packages/utils/runc/Makefile
 #svn export https://github.com/openwrt/packages/trunk/utils/runc/Makefile ./feeds/packages/utils/runc/Makefile
 
-#echo "防掉线"
+#echo "out"
 # INTERFACE='$INTERFACE'
 # INTERFACE...='$INTERFACE...'
 # LOG='$LOG'
@@ -200,13 +201,13 @@ sed -i 's/65535/165535/g' ./package/kernel/linux/files/sysctl-nf-conntrack.conf
 # sed -i "90a\      ifup $INTERFACE" feeds/packages/net/mwan3/files/etc/hotplug.d/iface/15-mwan3
 # sed -i "91a\      $LOG notice \"Recycled $INTERFACE...\"" feeds/packages/net/mwan3/files/etc/hotplug.d/iface/15-mwan3
 
-#echo "其他修改"
+#echo "other"
 sed -i 's/option commit_interval 24h/option commit_interval 4h/g' feeds/packages/net/nlbwmon/files/nlbwmon.config #修改流量统计写入为2
 sed -i 's#option database_directory /var/lib/nlbwmon#option database_directory /etc/config/nlbwmon_data#g' feeds/packages/net/nlbwmon/files/nlbwmon.config #修改流量统计数据存放默认位置
 # sed -i 's@interval: 5@interval: 2@g' package/lean/luci-app-wrtbwmon/htdocs/luci-static/wrtbwmon.js #wrtbwmon默认刷新时间更改为1秒
 
 
-# echo '默认开启 Irqbalance'
+# echo ' Irqbalance'
 # sed -i "s/enabled '0'/enabled '1'/g" feeds/packages/utils/irqbalance/files/irqbalance.config
 
 cat ./package/build/profile > package/base-files/files/etc/profile
@@ -214,7 +215,7 @@ cat ./package/build/profile > package/base-files/files/etc/profile
 
 git clone https://github.com/kiddin9/luci-app-dnsfilter package/luci-app-dnsfilter
 
-echo '替换aria2'
+echo 'aria2'
 rm -rf feeds/luci/applications/luci-app-aria2 && \
 svn co https://github.com/sirpdboy/sirpdboy-package/trunk/luci-app-aria2 feeds/luci/applications/luci-app-aria2
 rm -rf feeds/packages/net/aria2 && \
@@ -304,7 +305,7 @@ sed -i '/shadowsocks-libev-ss-server/d' Makefile
 sed -i '/shadowsocks-libev-ss-local/d' Makefile
 popd
 
-# 在 X86 架构下移除 Shadowsocks-rust
+#  Shadowsocks-rust
 sed -i '/Rust:/d' package/passwall/luci-app-passwall/Makefile
 # sed -i '/Rust:/d' package/lean/luci-app-vssr/Makefile
 sed -i '/Rust:/d' ./package/build/pass/luci-ssr-plus/Makefile
