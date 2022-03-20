@@ -1,6 +1,7 @@
 #!/bin/bash
-#=================================================
-# Description: Build OpenWrt using GitHub Actions
+
+echo "--------------------start-----------------"
+
 WORKDIR=/workdir
 HOSTNAME=OpenWrt
 IPADDRESS=192.168.8.1
