@@ -78,7 +78,7 @@ jobs:
     - name: Install Feeds
       run: |
         cd $OPENWRTROOT
-        ../$DIY2_SH jz
+        ./diy.sh jz
         ./scripts/feeds install -a
     - name: Load Custom Configuration
       run: |
@@ -89,7 +89,6 @@ jobs:
           echo -e "\nCONFIG_ALL_NONSHARED=y" >> $OPENWRTROOT/.config
           # cat configx/general-packages-jz.config >> $OPENWRTROOT/.config
           # cat configx/extra-drivers.config >> $OPENWRTROOT/.config
-        #chmod +x scriptx/*.sh
         cd $OPENWRTROOT
         ../scriptx/clash-core.sh amd64
         make defconfig
