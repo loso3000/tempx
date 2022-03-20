@@ -79,12 +79,15 @@ jobs:
     - name: Install Feeds
       run: |
         cd $OPENWRTROOT
-        ../$DIY2_SH
+        #../$DIY2_SH jz
+        ../scriptx/diy.sh jz
         ./scripts/feeds install -a
     - name: Load Custom Configuration
       run: |
         [ -e files ] && mv files $OPENWRTROOT/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRTROOT/.config
+          echo -e "\nCONFIG_ALL=y" >> $OPENWRTROOT/.config
+          echo -e "\nCONFIG_ALL_NONSHARED=y" >> $OPENWRTROOT/.config
           cat configx/general-packages-mini.config >> $OPENWRTROOT/.config
           # cat configx/extra-drivers.config >> $OPENWRTROOT/.config
         # chmod +x scriptx/*.sh
