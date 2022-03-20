@@ -68,18 +68,16 @@ jobs:
     - name: Update Feeds
       id: update
       run: |
+        chmod +x scriptx/*.sh
         cd openwrt
         echo "OPENWRTROOT=$PWD" >> $GITHUB_ENV
         echo "::set-output name=OPENWRTROOT::$(echo $PWD)"
-       
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        chmod +x ../scriptx/*.sh
         ../$DIY_SH
     - name: Install Feeds
       run: |
         cd $OPENWRTROOT
-        #../$DIY2_SH jz
         ../scriptx/diy.sh jz
         ./scripts/feeds install -a
     - name: Load Custom Configuration
