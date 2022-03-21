@@ -120,21 +120,21 @@ jobs:
       uses: actions/upload-artifact@v2
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled()
       with:
-        name: OpenWrt-${{env.TARGET_DEVICE}}-bin
+        name: iOpenWrt-${{ github.event.inputs.target }}-${{ github.event.inputs.version }}-bin
         path: ${{env.REPO_FLODER}}/bin
 
     - name: 上传packages包
       uses: actions/upload-artifact@v2
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_PACKAGES == 'true' && !cancelled()
       with:
-        name: OpenWrt-${{env.TARGET_DEVICE}}-package
+        name: iOpenWrt-${{env.STRDATE}}-${{ github.event.inputs.target }}-${{ github.event.inputs.version }}-package
         path: ${{env.REPO_FLODER}}/bin/packages
 
     - name: 上传firmware
       uses: actions/upload-artifact@v2
       if: steps.organize.outputs.status == 'success' && env.UPLOAD_SYSUPGRADE == 'true' && !cancelled()
       with:
-        name: OpenWrt-${{env.TARGET_DEVICE}}-firmware
+        name: iOpenWrt-${{env.STRDATE}}-${{ github.event.inputs.target }}-${{ github.event.inputs.version }}-firmware
         path: firmware/*${{env.FIRMWARE_TYPE}}*
 
     - name: 上传到奶牛快传
