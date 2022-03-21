@@ -153,13 +153,13 @@ jobs:
         ./transfer wet -s -p 16 --no-progress $FIRMWARE 2>&1 | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(grep https wetransfer.log)"
         echo "::set-output name=url::href='$(grep https wetransfer.log | cut -f3 -d" ")' target='_blank'"
-    - name: 上传到 release
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
-      uses: svenstaro/upload-release-action@v2
-      with:
-        file: firmware/*
-        file_glob: true
-        overwrite: true
-        tag: ${{env.STRDATE}}
-        repo_token: ${{secrets.GITHUB_TOKEN}}
-        release_name: ${{env.STRDATE}} 自动发布
+    #- name: 上传到 release
+    #  if: steps.organize.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
+    #  uses: svenstaro/upload-release-action@v2
+    #  with:
+    #    file: firmware/*
+    #    file_glob: true
+    #    overwrite: true
+    #    tag: ${{env.STRDATE}}
+    #    repo_token: ${{secrets.GITHUB_TOKEN}}
+    #    release_name: ${{env.STRDATE}} 自动发布
