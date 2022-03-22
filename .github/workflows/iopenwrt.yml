@@ -113,8 +113,6 @@ jobs:
         echo "::set-output name=GENERATE_STATUS::success"
         
     - name: 筛选固件
-      id: organize
-      if: steps.compile.outputs.status == 'success' && !cancelled()
       run: |
         ls $REPO_FLODER/bin/targets/*/*/
         mkdir -p firmware
@@ -130,7 +128,7 @@ jobs:
         
     - name: 上传bin包
       uses: actions/upload-artifact@v2
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true' && !cancelled()
+      if: steps.organize.outputs.status == 'success' 
       with:
         name: iOpenWrt-${{ github.event.inputs.target }}-${{ github.event.inputs.version }}-bin
         path: ${{env.REPO_FLODER}}/bin
