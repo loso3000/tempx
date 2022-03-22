@@ -72,6 +72,9 @@ jobs:
     - name: 下载软件包
       run: |
         cd $REPO_FLODER
+        
+        #echo "REPO_FLODER=$PWD" >> $GITHUB_ENV
+        #echo "::set-output name=REPO_FLODER::$(echo $PWD)"
         make download -j16
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
@@ -84,21 +87,30 @@ jobs:
         mixkey: ${{env.REPO_BRANCH}}-${{env.ARCH}}-
         prefix: ${{github.workspace}}/${{env.REPO_FLODER}}
 
-    - name: 固件编译
-      timeout-minutes: 1440
-      id: compile
+    - name: Compile Packages
+      id: compileopenwrt
       run: |
         cd $REPO_FLODER
-        make -j$(($(nproc)+2)) || make -j1 V=s
-        echo "::set-output name=status::success"
-        echo "======================="
-        echo "磁盘使用情况:"
-        echo "======================="
-        df -hT
-        echo "======================="
-        du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
-        du -h --max-depth=1 ./build_dir
-        du -h --max-depth=1 ./bin
+        echo -e "$(nproc) thread compile"
+        make tools/compile -j$(nproc) || make tools/compile -j1 V=s
+        make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
+        make target/compile -j$(nproc) || make target/compile -j1 V=s IGNORE_ERRORS=1
+        make diffconfig
+        make package/compile -j$(nproc) IGNORE_ERRORS=1 || make package/compile -j1 V=s IGNORE_ERRORS=1
+        make package/index
+    - name: Generate Firmware
+      id: generate
+      run: |
+        cd $REPO_FLODER
+        make package/install -j$(nproc) || make package/install -j1 V=s
+        echo "::set-output name=GENERATE_STATUS::success"
+    - name: Generate Firmware2
+      id: generate2
+      run: |
+        cd $REPO_FLODER
+        make target/install -j$(nproc) || make target/install -j1 V=s
+        make checksum
+        echo "::set-output name=GENERATE_STATUS::success"
         
     - name: 筛选固件
       id: organize
