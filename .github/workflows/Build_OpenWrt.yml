@@ -14,19 +14,20 @@ on:
         type: choice
         options: [ coolsnowwolf, ImmortalWrt, openwrt ]
       target:
-        description: '选择要生成firmware的机型：'
+        description: '选择要生成的机型:'
         default: 'x86_64'
         required: true
         type: choice
-        options: [ x86_64, nanopi-r2s,nanopi-r4s, -phicomm_k2p, Rpi-4B,-armvirt_64_Default, -asus_rt-n16 , -newifi-d2]
+        options: [ x86_64, nanopi-r2s , nanopi-r4s , -phicomm_k2p , Rpi-4B , -armvirt_64_Default , -asus_rt-n16 , -newifi-d2 ]
       version:
-        description: '选择要生成版本： super(极致), mini(精简)，plus(全家桶) ，dz(定制）'
+        description: '选择要生成版本： super(极致), mini(精简),plus(全家桶),dz(定制）'
         default: 'super'
         required: true
         type: choice
         options: [super,mini,plus,dz]
       partsize:
-        description: '设置rootfs大小：（选填,只适用x86_64，r系列，armvirt）'
+        description: '设置rootfs大小：（选填,只适用x86_64,r系列,armvirt）'
+        default: '920'
         required: false
 
 env:
@@ -94,7 +95,6 @@ jobs:
         DEBIAN_FRONTEND: noninteractive
       run: |
         chmod +x ./init_build_environment.sh
-        
         sudo ./init_build_environment.sh &
    
     - name: Clone source code
@@ -198,7 +198,7 @@ jobs:
           cp -rf $REPO_FLODER/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{ github.event.inputs.target }}/ || true
           cd ./firmware/${{ github.event.inputs.target }}
           gzip *.img || true
-          echo -e "Sirpdboy-IPV6-ZJ-${{ env.DATA}}极致通用版--【efi通用不区分引导方式】\n" > 版本日期和MD5信息.txt
+          echo -e "Sirpdboy-IPV6-${{ github.event.inputs.target }}-${{ github.event.inputs.version }}--【efi通用不区分引导方式】\n" > 版本日期和MD5信息.txt
           echo -e "【固件插件说明与各版本下载链接】：https://github.com/sirpdboy/openwrt/ \n" >> 版本日期和MD5信息.txt
           echo -e "MD5: \n" >> 版本日期和MD5信息.txt
           md5sum *img* >> 版本日期和MD5信息.txt
