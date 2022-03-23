@@ -64,7 +64,6 @@ jobs:
     - name: Load Settings
       run: |
         if [ ${{github.event.inputs.repourl}} == "coolsnowwolf" ]; then
-        
             echo "REPO_URL=https://github.com/coolsnowwolf/lede" >> $GITHUB_ENV
             echo "REPO_BRANCH=master" >> $GITHUB_ENV
         elif [ ${{github.event.inputs.repourl}} == "immortalwrt" ]; then
@@ -72,23 +71,11 @@ jobs:
             echo "REPO_URL=https://github.com/immortalwrt/immortalwrt" >> $GITHUB_ENV
             echo "REPO_BRANCH=openwrt-18.06-k5.4" >> $GITHUB_ENV
         elif [ ${{github.event.inputs.repourl}} == "openwrt" ]; then
-        
             echo "REPO_URL=https://github.com/openwrt/openwrt" >> $GITHUB_ENV
             echo "REPO_BRANCH=openwrt-18.06" >> $GITHUB_ENV
         fi
             echo "VERSIONL=${{ github.event.inputs.version }}" >> $GITHUB_ENV
             echo "PARTSIZE=${{ github.event.inputs.partsize }}" >> $GITHUB_ENV
-        if [ ${{ github.event.inputs.target }} == "x86_64" ]; then
-            echo "ARCH=linux/amd64" >> $GITHUB_ENV
-            echo "MTARGET=x86_64" >> $GITHUB_ENV
-        elif [[ ${{ github.event.inputs.target }}=~ (Rpi-4B|nanopi-r2s|nanopi-r4s) ]]; then
-            echo "ARCH=linux/arm64" >> $GITHUB_ENV
-        fi
-        if [ ${{ github.event.inputs.target }} == "Rpi-4B" ]; then
-            echo "MTARGET=aarch64_cortex-a72" >> $GITHUB_ENV
-        elif [ ${{ github.event.inputs.target }}== "nanopi-r2s" ]; then
-            echo "MTARGET=aarch64_generic" >> $GITHUB_ENV
-        fi
 
     - name: Initialization environment
       env:
@@ -102,17 +89,7 @@ jobs:
         #git clone $REPO_URL -b v$REPO_BRANCH $REPO_FLODER
          
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH $REPO_FLODER
-        if [[ "${{ contains(github.event.action, 'sdk') }}" == "true" ]]; then
-        cd openwrt
-        if [[ ${{matrix.target}} == "x86_64" ]]; then
-            curl -fL -m 60 -o sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/x86/64/openwrt-sdk-$REPO_BRANCH-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz || curl -fL -m 60 -o sdk.tar.xz https://openwrt.tetaneutral.net/releases/21.02-SNAPSHOT/targets/x86/64/openwrt-sdk-21.02-SNAPSHOT-x86-64_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-        elif [[ ${{matrix.target}} == nanopi* ]]; then
-            curl -fL -m 60 -o sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/rockchip/armv8/openwrt-sdk-$REPO_BRANCH-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz || curl -fL -m 60 -o sdk.tar.xz https://openwrt.tetaneutral.net/releases/21.02-SNAPSHOT/targets/rockchip/armv8/openwrt-sdk-21.02-SNAPSHOT-rockchip-armv8_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-        elif [[ ${{matrix.target}} =~ "Rpi-4B" ]]; then
-            curl -fL -m 60 -o sdk.tar.xz https://downloads.openwrt.org/releases/$REPO_BRANCH/targets/bcm27xx/bcm2711/openwrt-sdk-$REPO_BRANCH-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz || curl -fL -m 60 -o sdk.tar.xz https://openwrt.tetaneutral.net/releases/21.02-SNAPSHOT/targets/bcm27xx/bcm2711/openwrt-sdk-21.02-SNAPSHOT-bcm27xx-bcm2711_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-        fi
-        fi
-        echo "REPO_BRANCH=$REPO_BRANCH" >> $GITHUB_ENV
+
     - name: Free up disk space
       if: env.FREE_UP_DISK == 'true'
       env:
@@ -182,7 +159,7 @@ jobs:
           
     - name: Prepare Artifact
       run: |
-        shopt -s extglob
+
         mkdir -p firmware/${{ github.event.inputs.target }} 
         if [[ ${{ github.event.inputs.target }}== "nanopi-r4s" || ${{ github.event.inputs.target }} == "nanopi-r2c" ]]; then
           rm -rf $REPO_FLODER/bin/targets/*/*/!(*.gz)
@@ -193,7 +170,6 @@ jobs:
           mkdir firmware/nanopi-r2c
           cp -rf $REPO_FLODER/bin/targets/*/*/*r2c*sysupgrade* ./firmware/nanopi-r2c/ || true
           cp -rf $REPO_FLODER/bin/targets/*/*/*{combined,r2s*sysupgrade,rpi-4*sysupgrade}* ./firmware/${{ github.event.inputs.target }}/ || true
-          
         else
           cp -rf $REPO_FLODER/bin/targets/*/*/*{combined,sysupgrade}* ./firmware/${{ github.event.inputs.target }}/ || true
           cd ./firmware/${{ github.event.inputs.target }}
@@ -204,21 +180,14 @@ jobs:
           md5sum *img* >> 版本日期和MD5信息.txt
         fi
         cp -rf $REPO_FLODER/bin/targets/*/*/*{combined,r2s*sysupgrade,rpi-4*sysupgrade}* ./firmware/${{ github.event.inputs.target }}/ || true
-        
-        
 
     - name: Upload Firmware
       uses: actions/upload-artifact@main
       with:
           name: OpenWrt-ipv6-${{ github.event.inputs.target }}-${{ github.event.inputs.version }}-Firmware
           path: ./firmware/${{ github.event.inputs.target }}
-      #- name: Upload firmware to cowtransfer
-      #  run: |
-      #  curl -fsSL git.io/file-transfer | sh
-      #   ./transfer cow --block 2621440 -s -p 64 --no-progress ./jz/firmware 2>&1 | tee cowtransfer.log
-      #   echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
     - name: Upload Firmware wetransfer
       run: |
           curl -fsSL git.io/file-transfer | sh
-          ./transfer wet -s -p 16 --no-progress ./jz/firmware 2>&1 | tee wetransfer.log
+          ./transfer wet -s -p 16 --no-progress ./firmware/${{ github.event.inputs.target }} 2>&1 | tee wetransfer.log
           echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
