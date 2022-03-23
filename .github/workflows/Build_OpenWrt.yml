@@ -102,7 +102,7 @@ jobs:
       uses: klever1988/cachewrtbuild@main
       with:
           ccache: 'true'
-          prefix: ${{ github.workspace }}/${{ REPO_FLODER}}
+          prefix: ${{ github.workspace }}/openwrt
           clean: 'true'
     - name: Update feeds
       run: |
