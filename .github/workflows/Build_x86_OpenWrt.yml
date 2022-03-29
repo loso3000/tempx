@@ -160,13 +160,6 @@ jobs:
         run: |
           cd $OPENWRT_ROOT_PATH
           ./scripts/feeds update -a
-
-      #- name: update package
-      #  if: steps.hash.outputs.REBUILD_TOOLCHAIN == 'true'
-       # run: |
-        #  cd $OPENWRT_ROOT_PATH
-         # chmod +x $GITHUB_WORKSPACE/scriptx/*.sh
-          #$GITHUB_WORKSPACE/$DIY_SH
           ./scripts/feeds install -a
           make defconfig
 
