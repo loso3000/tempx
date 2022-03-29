@@ -1,8 +1,7 @@
-#!/usr/bin/env bash
-# set -x
+#!/usr/bin
 
-[[ x$REPO_FLODER = x ]] && \
-(REPO_FLODER="openwrt" && echo "REPO_FLODER=openwrt" >>$GITHUB_ENV)
+#[[ x$REPO_FLODER = x ]] && \
+# (REPO_FLODER="openwrt" && echo "REPO_FLODER=openwrt" >>$GITHUB_ENV)
 
 color() {
     case $1 in
@@ -328,11 +327,6 @@ chmod +x ./package/*/*/*/root/etc/init.d/*
 chmod +x ./package/*/*/*/root/usr/*/*
 status
 
-echo -e "$(color cy '更新配置....')\c"
-sed -i 's/^[ \t]*//g' ./.config
-make defconfig 1>/dev/null 2>&1
-cat .config
-status
 
 # echo "SSH_ACTIONS=true" >>$GITHUB_ENV #SSH后台
 # echo "UPLOAD_PACKAGES=false" >>$GITHUB_ENV
