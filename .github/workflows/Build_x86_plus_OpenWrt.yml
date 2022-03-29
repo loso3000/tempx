@@ -6,7 +6,7 @@
 # Blog: https://p3terx.com
 #=================================================
 
-name: Build x86/64 openwrt
+name: Build x86/64_plus openwrt
 
 on:
   # push:
@@ -18,7 +18,7 @@ on:
     inputs:
       version:
         description: '选择要生成版本： super(极致), mini(精简)，plus(全家桶) ，dz(定制）'
-        default: 'super'
+        default: 'plus'
         required: true
         type: choice
         options: [super,mini,plus,dz]
@@ -382,7 +382,7 @@ jobs:
       - name: Upload Bin Archive
         uses: actions/upload-artifact@main
         with:
-          name: bin-archive
+          name: bin-archive-x86-plus
           path: ${{ env.OPENWRT_ROOT_PATH }}/${{ env.DEVICE_TARGET }}-${{ env.DEVICE_SUBTARGET }}.zip
 
   Upload:
