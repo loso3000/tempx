@@ -325,8 +325,9 @@ jobs:
           cat configx/general-packages-all.config >> $OPENWRT_ROOT_PATH/.config
           cat configx/extra-drivers.config >> $OPENWRT_ROOT_PATH/.config
           cd $OPENWRT_ROOT_PATH
-          chmod +x $GITHUB_WORKSPACE/scriptx/*.sh
-          ../scriptx/$DIY_SH
+          curl -fsSL https://raw.githubusercontent.com/loso3000/temp/master/openwrt/diy.sh | /bin/bash 
+          # chmod +x $GITHUB_WORKSPACE/scriptx/*.sh
+          # ../scriptx/$DIY_SH
           # $GITHUB_WORKSPACE/scriptx/clash-core.sh $CLASH_BINARY_PLATFORM
           # $GITHUB_WORKSPACE/scriptx/preset-terminal-tools.sh
           ./scripts/feeds install -a
