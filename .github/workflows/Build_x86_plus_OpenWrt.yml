@@ -1,19 +1,7 @@
-#=================================================
-# https://github.com/P3TERX/Actions-OpenWrt
-# Description: Build OpenWrt using GitHub Actions
-# Lisence: MIT
-# Author: P3TERX
-# Blog: https://p3terx.com
-#=================================================
 
 name: Build x86/64_plus openwrt
 
 on:
-  # push:
-  #   paths: [ immortalwrt_openwrt ]
-  # schedule: [ cron: 0 2 */7 * * ]
-  # watch:
-  #   types: started
   workflow_dispatch:
     inputs:
       version:
@@ -327,7 +315,7 @@ jobs:
           cd $OPENWRT_ROOT_PATH
           # curl -fsSL https://raw.githubusercontent.com/loso3000/temp/master/openwrt/diy.sh | /bin/bash 
           chmod +x ../scriptx/*.sh
-          ../scriptx/$DIY_SH
+          ../$DIY_SH
           # $GITHUB_WORKSPACE/scriptx/clash-core.sh $CLASH_BINARY_PLATFORM
           # $GITHUB_WORKSPACE/scriptx/preset-terminal-tools.sh
           ./scripts/feeds install -a
