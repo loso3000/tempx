@@ -15,7 +15,7 @@ env:
   CONFIG_FILE: configx/x86/64.config
   SOURCE_URL: https://github.com/immortalwrt/immortalwrt
   SOURCE_BRANCH: openwrt-18.06-k5.4
-  DIY_SH: scriptx/diy.sh
+  DIY_SH: diy.sh
   TOOLCHAIN_TAG: toolchain
   CLASH_BINARY_PLATFORM: amd64
   TOOLCHAIN_RELEASE_UPLOAD: true
@@ -314,7 +314,7 @@ jobs:
           cat configx/extra-drivers.config >> $OPENWRT_ROOT_PATH/.config
           cd $OPENWRT_ROOT_PATH
           # curl -fsSL https://raw.githubusercontent.com/loso3000/temp/master/openwrt/diy.sh | /bin/bash 
-          chmod +x ../scriptx/*.sh
+          chmod +x ../*.sh
           ../$DIY_SH
           # $GITHUB_WORKSPACE/scriptx/clash-core.sh $CLASH_BINARY_PLATFORM
           # $GITHUB_WORKSPACE/scriptx/preset-terminal-tools.sh
