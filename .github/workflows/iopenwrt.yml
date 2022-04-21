@@ -18,7 +18,7 @@ on:
         default: 'x86_64'
         required: true
         type: choice
-        options: [ x86_64, newifi-d2, r4s, r2r, r2c, phicomm_k2p, armvirt_64_Default, asus_rt-n16 ]
+        options: [ x86_64, newifi-d2, r4s, r2r, r2c, r2s, phicomm_k2p, armvirt_64_Default, asus_rt-n16 ]
       version:
         description: '选择要生成版本： super(极致), mini(精简)，plus(全家桶) ，dz(定制）'
         default: 'super'
